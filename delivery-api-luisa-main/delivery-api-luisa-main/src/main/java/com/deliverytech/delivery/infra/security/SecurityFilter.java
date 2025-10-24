@@ -1,6 +1,6 @@
 package com.deliverytech.delivery.infra.security;
 
-import com.deliverytech.delivery.repository.IUserRepository;
+import com.deliverytech.delivery.repository.UserFolder.IUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,8 +16,10 @@ import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+
     @Autowired
     TokenService tokenService;
+    
     @Autowired
     IUserRepository userRepository;
 
@@ -26,7 +28,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if(token != null){
             var login = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByLogin(login);
+            UserDetails user = userRepository.findByEmail(login).orElse(null);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

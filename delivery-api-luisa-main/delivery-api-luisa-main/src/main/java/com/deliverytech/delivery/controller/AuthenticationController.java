@@ -1,14 +1,11 @@
 package com.deliverytech.delivery.controller;
 
-import com.deliverytech.delivery.dto.AuthenticationDTO;
-import com.deliverytech.delivery.dto.LoginResponseDTO;
-import com.deliverytech.delivery.dto.RegisterDTO;
-import com.deliverytech.delivery.entity.User;
 import com.deliverytech.delivery.infra.security.TokenService;
-import com.deliverytech.delivery.repository.IUserRepository;
-
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import com.deliverytech.delivery.dto.UserFolder.AuthenticationDTO;
+import com.deliverytech.delivery.dto.UserFolder.LoginResponseDTO;
+import com.deliverytech.delivery.dto.UserFolder.RegisterDTO;
+import com.deliverytech.delivery.entity.UserFolder.User;
+import com.deliverytech.delivery.repository.UserFolder.IUserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private IUserRepository repository;
+    
     @Autowired
     private TokenService tokenService;
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
         var token = tokenService.generateToken((User) auth.getPrincipal());
@@ -42,10 +42,10 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
-        if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if(this.repository.findByEmail(data.email()).isPresent()) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.login(), encryptedPassword, data.role());
+        User newUser = new User(data.email(), encryptedPassword, data.name(),  data.role());
 
         this.repository.save(newUser);
 
