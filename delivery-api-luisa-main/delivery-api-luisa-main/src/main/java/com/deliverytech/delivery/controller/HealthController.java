@@ -57,9 +57,9 @@ public class HealthController {
         return new AppInfo(
             "Delivery Tech API",
             "1.0.0",
-            "Guilherme Damico Balsi",
+            "Luisa Jeronimo de Lima",
             "JDK 21",
-            "Spring Boot 3.9.4"
+            "Spring Boot 3.3.5"
         );
     }
 

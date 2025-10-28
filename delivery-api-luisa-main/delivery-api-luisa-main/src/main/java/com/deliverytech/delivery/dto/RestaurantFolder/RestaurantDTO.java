@@ -8,4 +8,7 @@ public class RestaurantDTO {
     private Long id;
     private String name;
     private String description;
+    private String cep;
+    private String address;
+    private String cnpj;
 }

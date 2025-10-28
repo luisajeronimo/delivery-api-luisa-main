@@ -18,21 +18,18 @@ public class RestaurantService implements IRestaurantService {
     @Autowired
     private IRestaurantRepository restaurantRepository;
 
-    public RestaurantService() {
-        super();
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
     public List<RestaurantResponseDTO> getAllRestaurants() {
-        ModelMapper modelMapper = new ModelMapper();
         List<Restaurant> restaurants = restaurantRepository.findAll();
         return Arrays.asList(modelMapper.map(restaurants, RestaurantResponseDTO[].class));
     }
 
     @Override
     public RestaurantResponseDTO createRestaurant(RestaurantDTO restaurantDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         Restaurant entity = modelMapper.map(restaurantDTO, Restaurant.class);
         Restaurant restaurant = restaurantRepository.save(entity);
         return modelMapper.map(restaurant, RestaurantResponseDTO.class);
@@ -40,7 +37,6 @@ public class RestaurantService implements IRestaurantService {
 
     @Transactional
     public RestaurantResponseDTO updateRestaurant(Long restaurantId, RestaurantDTO restaurantDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null) {
             return null;
@@ -52,7 +48,6 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public RestaurantResponseDTO getRestaurant(Long restaurantId) {
-        ModelMapper modelMapper = new ModelMapper();
         return restaurantRepository.findById(restaurantId).map(restaurant -> modelMapper.map(restaurant, RestaurantResponseDTO.class)).orElse(null);
     }
 
