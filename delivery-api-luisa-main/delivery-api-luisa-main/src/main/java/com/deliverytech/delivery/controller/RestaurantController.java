@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Restaurantes.
+ * Base URL: /api/v1/restaurants
+ * Observação: @SecurityRequirement é apenas para documentação (Swagger). 
+ * A proteção real é feita pelo Spring Security (JWT no header Authorization).
+ */
 @RestController
 @RequestMapping("/api/v1/restaurants")
 public class RestaurantController {
@@ -34,6 +40,12 @@ public class RestaurantController {
             }
     )
 
+    // Requer token Bearer no Swagger (documentação)
+    /**
+     * GET /api/v1/restaurants
+     * Lista todos os restaurantes.
+     * Retorna 200 OK com a lista no corpo.
+     */
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> list() {
@@ -52,7 +64,13 @@ public class RestaurantController {
                 )
             }
     )
-
+    
+    // Requer token Bearer no Swagger (documentação)
+    /**
+     * POST /api/v1/restaurants
+     * Cria um novo restaurante a partir do JSON recebido.
+     * Valida o payload (DTO) e retorna 201 Created com o recurso criado.
+     */
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping
     public ResponseEntity<RestaurantResponseDTO> create(@Valid @RequestBody RestaurantDTO restaurantDTO) {
@@ -60,6 +78,12 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);
     }
 
+    // Requer token Bearer no Swagger (documentação)
+    /**
+     * GET /api/v1/restaurants/{restaurantId}
+     * Busca um restaurante pelo ID.
+     * Retorna 200 OK com o restaurante encontrado.
+     */
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/{restaurantId}")
     public ResponseEntity<RestaurantResponseDTO> getRestaurant(@Valid @PathVariable("restaurantId") Long restaurantId) {
@@ -67,6 +91,12 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(restaurant);
     }
 
+    // Requer token Bearer no Swagger (documentação)
+    /**
+     * PUT /api/v1/restaurants/{restaurantId}
+     * Atualiza os dados de um restaurante existente pelo ID.
+     * Retorna 200 OK com o restaurante atualizado.
+     */
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping(value = "/{restaurantId}" )
     public ResponseEntity<RestaurantResponseDTO> updateRestaurant(@PathVariable("restaurantId") Long restaurantId, 
@@ -75,6 +105,12 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedRestaurant);
     }
 
+    // Requer token Bearer no Swagger (documentação)
+    /**
+     * DELETE /api/v1/restaurants/{restaurantId}
+     * Remove um restaurante pelo ID.
+     * Retorna 204 No Content em caso de sucesso.
+     */
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/{restaurantId}" )
     public ResponseEntity<Void> deleteRestaurant(@PathVariable("restaurantId") Long restaurantId) {
