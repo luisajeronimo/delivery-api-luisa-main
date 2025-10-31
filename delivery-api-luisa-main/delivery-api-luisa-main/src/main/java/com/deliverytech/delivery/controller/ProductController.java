@@ -23,119 +23,120 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
  
 @RestController
-@RequestMapping("/api/produtos")
+@RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
-@Tag(name = "Produtos", description = "Operações relacionadas aos produtos")
+@Tag(name = "Products", description = "Operations related to products")
 public class ProductController {
     @Autowired
     private IProductService productService;
  
     @PostMapping
-    @Operation(summary = "Cadastrar produto",
-               description = "Cria um novo produto no sistema")
+    @Operation(summary = "Register product",
+               description = "Creates a new product in the system")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-        @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
+        @ApiResponse(responseCode = "201", description = "Product created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid data"),
+        @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
-    public ResponseEntity<ProductResponseDTO> cadastrar(
+    public ResponseEntity<ProductResponseDTO> register(
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Dados do produto a ser criado"
+                description = "Product data to be created"
             ) ProductDTO dto) {
  
-        ProductResponseDTO product = productService.cadastrarProduct(dto);
+        ProductResponseDTO product = productService.createProduct(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
  
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar produto por ID",
-               description = "Recupera um produto específico pelo ID")
+    @Operation(summary = "Find product by ID",
+               description = "Retrieve a specific product by its ID")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produto encontrado"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+        @ApiResponse(responseCode = "200", description = "Product found"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<ProductResponseDTO> buscarPorId(
-            @Parameter(description = "ID do produto")
+    public ResponseEntity<ProductResponseDTO> findById(
+            @Parameter(description = "Product's ID")
             @PathVariable Long id) {
 
-        ProductResponseDTO product = productService.buscarProductPorId(id);
+        ProductResponseDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
  
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar produto",
-               description = "Atualiza os dados de um produto existente")
+    @Operation(summary = "Update product",
+               description = "Update the details of an existing product")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos")
+        @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Product not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid data")
     })
-    public ResponseEntity<ProductResponseDTO> atualizar(
-            @Parameter(description = "ID do produto")
+    public ResponseEntity<ProductResponseDTO> update(
+            @Parameter(description = "Product's ID")
             @PathVariable Long id,
             @Valid @RequestBody ProductDTO dto) {
 
-        ProductResponseDTO product = productService.atualizarProduto(id, dto);
+        ProductResponseDTO product = productService.updateProduct(id, dto);
         return ResponseEntity.ok(product);
     }
  
     @DeleteMapping("/{id}")
-    @Operation(summary = "Remover produto",
-               description = "Remove um produto do sistema")
+    @Operation(summary = "Remove product",
+               description = "Remove a product from the system")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Produto removido com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado"),
-        @ApiResponse(responseCode = "409", description = "Produto possui pedidos associados")
+        @ApiResponse(responseCode = "204", description = "Product removed successfully"),
+        @ApiResponse(responseCode = "404", description = "Product not found"),
+        @ApiResponse(responseCode = "409", description = "Product has associated orders")
     })
-    public ResponseEntity<Void> remover(
-            @Parameter(description = "ID do produto")
+    public ResponseEntity<Void> remove(
+            @Parameter(description = "Product's ID")
             @PathVariable Long id) {
  
-        productService.removeProduct(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
  
-    @PatchMapping("/{id}/disponibilidade")
-    @Operation(summary = "Alterar disponibilidade",
-               description = "Alterna a disponibilidade do produto")
+    @PatchMapping("/{id}/availability")
+    @Operation(summary = "Change availability",
+               description = "Toggle the availability of a product")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Disponibilidade alterada com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+        @ApiResponse(responseCode = "200", description = "Availability changed successfully"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<ProductResponseDTO> changeAvailability(
-            @Parameter(description = "ID do produto")
-            @PathVariable Long id) {
+    public ResponseEntity<ProductResponseDTO> changeProductStatus(
+            @Parameter(description = "Products's ID")
+            @PathVariable Long id,
+            @Valid @RequestBody ProductDTO dto) {
 
-        ProductResponseDTO product = productService.changeAvailability(id);
+        ProductResponseDTO product = productService.changeProductStatus(id, dto);
         return ResponseEntity.ok(product);
     }
  
-    @GetMapping("/categoria/{categoria}")
-    @Operation(summary = "Buscar por categoria",
-               description = "Lista produtos de uma categoria específica")
+    @GetMapping("/category/{category}")
+    @Operation(summary = "Find by category",
+               description = "List products from a specific category")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produtos encontrados")
+        @ApiResponse(responseCode = "200", description = "Products found")
     })
-    public ResponseEntity<List<ProductResponseDTO>> buscarPorCategoria(
-            @Parameter(description = "Categoria do produto")
-            @PathVariable String categoria) {
+    public ResponseEntity<List<ProductResponseDTO>> findByCategory(
+            @Parameter(description = "Product's category")
+            @PathVariable String category) {
 
-        List<ProductResponseDTO> products = productService.findProductsByCategory(categoria);
+        List<ProductResponseDTO> products = productService.getAllProductsByCategory(category);
         return ResponseEntity.ok(products);
     }
  
-    @GetMapping("/buscar")
-    @Operation(summary = "Buscar por nome",
-               description = "Busca produtos pelo nome")
+    @GetMapping("/find-by-name")
+    @Operation(summary = "Find by name",
+               description = "Search products by name")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso")
+        @ApiResponse(responseCode = "200", description = "Search completed successfully")
     })
-    public ResponseEntity<List<ProductResponseDTO>> buscarPorNome(
-            @Parameter(description = "Nome do produto")
-            @RequestParam String nome) {
+    public ResponseEntity<List<ProductResponseDTO>> findByName(
+            @Parameter(description = "Product's name")
+            @RequestParam String name) {
 
-        List<ProductResponseDTO> products = productService.buscarProductsPorNome(nome);
+        List<ProductResponseDTO> products = productService.getAllProductsByNameSearch(name);
         return ResponseEntity.ok(products);
     }
 

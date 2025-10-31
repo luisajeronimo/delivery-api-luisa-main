@@ -8,10 +8,15 @@ import java.time.LocalDateTime;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IOrderRepository extends JpaRepository<Order, Long> {
+    /**
+     * Repositório JPA para operações de leitura/gravação de {@link com.deliverytech.delivery.entity.OrderFolder.Order}.
+     *
+     * Métodos definidos abaixo usam a convenção de nomes do Spring Data para gerar queries automaticamente.
+     */
 
     // Buscar pedidos por cliente
     List<Order> findByCustomerOrderByOrderDateDesc(Customer customer);
@@ -24,8 +29,12 @@ public interface IOrderRepository extends JpaRepository<Order, Long> {
  
     // Buscar pedidos por período
     List<Order> findByOrderDateBetweenOrderByOrderDateDesc(LocalDateTime inicio, LocalDateTime fim);
-    List<Order> findByStatusAndOrderDateBetweenOrderByOrderDateDesc(OrderStatus status, LocalDateTime inicio, LocalDateTime fim, Pageable pageable);
-    List<Order> findByRestaurantIdAndStatusOrderByOrderDateDesc(Long id, OrderStatus status);
+    
+    // Buscar por status dentro de um intervalo de datas com paginação
+    List<Order> findByOrderStatusAndOrderDateBetweenOrderByOrderDateDesc(OrderStatus status, LocalDateTime inicio, LocalDateTime fim, Pageable pageable);
+
+    // Buscar pedidos de um restaurante filtrados por status
+    List<Order> findByRestaurantIdAndOrderStatusOrderByOrderDateDesc(Long id, OrderStatus status);
 
 }
 

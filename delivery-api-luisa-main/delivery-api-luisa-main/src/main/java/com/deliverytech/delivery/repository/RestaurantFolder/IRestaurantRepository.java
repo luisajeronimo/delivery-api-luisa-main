@@ -14,5 +14,5 @@ public interface IRestaurantRepository extends JpaRepository<Restaurant, Long> {
     //Verifica existencia
     public boolean existsByName(String name);
  
-    List<Restaurant> findByCEPContainingOrderByDataCadastroDesc(String cep);
+    List<Restaurant> findByCepContainingOrderByCreatedAtDesc(String cep);
 }

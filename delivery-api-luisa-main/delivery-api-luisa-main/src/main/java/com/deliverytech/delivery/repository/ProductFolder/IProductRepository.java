@@ -1,6 +1,5 @@
 package com.deliverytech.delivery.repository.ProductFolder;
 
-import com.deliverytech.delivery.entity.CustomerFolder.Customer;
 import com.deliverytech.delivery.entity.ProductFolder.Product;
 import com.deliverytech.delivery.entity.ProductFolder.ProductStatus;
 import com.deliverytech.delivery.entity.RestaurantFolder.Restaurant;
@@ -10,7 +9,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
-    
+    /**
+     * Repositório JPA para operações sobre {@link com.deliverytech.delivery.entity.ProductFolder.Product}.
+     *
+     * Notas:
+     * - Os métodos abaixo usam convenções do Spring Data para gerar consultas automaticamente com base
+     *   nos nomes dos métodos e nos nomes dos atributos das entidades.
+     */
+
     // Buscar produtos por restaurante
     List<Product> findByRestaurantAndStatus(Restaurant restaurant, ProductStatus status);
 
@@ -31,6 +37,6 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByPriceIsLessThanEqualAndStatus(BigDecimal price, ProductStatus status);
 
     // Ordenar por preço
-    List<Product> findByStatusOrderByPriceAsc();
-    List<Product> findByStatusOrderByPriceDesc();
+    List<Product> findByStatusOrderByPriceAsc(ProductStatus status);
+    List<Product> findByStatusOrderByPriceDesc(ProductStatus status);
 }

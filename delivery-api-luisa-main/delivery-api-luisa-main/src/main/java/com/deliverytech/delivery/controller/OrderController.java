@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,25 +30,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
  
 @RestController
-@RequestMapping("/api/pedidos")
+@RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 public class OrderController {
     @Autowired
     private IOrderService orderService;
  
     @PostMapping
-    @Operation(summary = "Criar pedido",
-               description = "Cria um novo pedido no sistema")
+    @Operation(summary = "Create order",
+               description = "Create a new order in the system")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Pedido criado com sucesso"),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-        @ApiResponse(responseCode = "404", description = "Customere ou restaurante não encontrado"),
-        @ApiResponse(responseCode = "409", description = "Produto indisponível")
+        @ApiResponse(responseCode = "201", description = "Order created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid data"),
+        @ApiResponse(responseCode = "404", description = "Customer or restaurant not found"),
+        @ApiResponse(responseCode = "409", description = "Product unavailable")
     })
-    public ResponseEntity<OrderDTO> criarOrder(
+    public ResponseEntity<OrderDTO> createOrder(
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Dados do pedido a ser criado"
+                description = "Order data to be created"
             ) OrderDTO dto) {
  
         OrderDTO order = orderService.createOrder(dto);
@@ -57,13 +57,13 @@ public class OrderController {
     }
  
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar pedido por ID",
-               description = "Recupera um pedido específico com todos os detalhes")
+    @Operation(summary = "Find order by ID",
+               description = "Retrieve a specific order with all details")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Order encontrado"),
-        @ApiResponse(responseCode = "404", description = "Order não encontrado")
+        @ApiResponse(responseCode = "200", description = "Order found"),
+        @ApiResponse(responseCode = "404", description = "Order not found")
     })
-    public ResponseEntity<OrderDTO> buscarPorId(
+    public ResponseEntity<OrderDTO> findById(
             @Parameter(description = "ID do pedido")
             @PathVariable Long id) {
         OrderDTO order = orderService.findOrderById(id);
@@ -71,36 +71,36 @@ public class OrderController {
     }
  
     @GetMapping
-    @Operation(summary = "Listar pedidos",
-               description = "Lista pedidos com filtros opcionais e paginação")
+    @Operation(summary = "List orders",
+               description = "Retrieve a list of orders with optional filters and pagination")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
+        @ApiResponse(responseCode = "200", description = "List retrieved successfully")
     })
-    public ResponseEntity<List<OrderDTO>> listar(
-            @Parameter(description = "Status do pedido")
+    public ResponseEntity<List<OrderDTO>> list(
+            @Parameter(description = "Order status")
             @RequestParam(required = false) OrderStatus status,
-            @Parameter(description = "Data inicial")
+            @Parameter(description = "Start date")
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
-            @Parameter(description = "Data final")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @Parameter(description = "End date")
             @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim,
-            @Parameter(description = "Parâmetros de paginação")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @Parameter(description = "Pagination parameters")
             Pageable pageable) {
- 
-            List<OrderDTO> orders = orderService.listOrders(status, dataInicio, dataFim, pageable);
+
+            List<OrderDTO> orders = orderService.listOrders(status, startDate, endDate, pageable);
         return ResponseEntity.ok(orders);
     }
  
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Atualizar status do pedido",
-               description = "Atualiza o status de um pedido")
+    @Operation(summary = "Update order status",
+               description = "Update the status of an order")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Status atualizado com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Order não encontrado"),
-        @ApiResponse(responseCode = "400", description = "Transição de status inválida")
+        @ApiResponse(responseCode = "200", description = "Status updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Order not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid status transition")
     })
-    public ResponseEntity<OrderDTO> atualizarStatus(
+    public ResponseEntity<OrderDTO> updateStatus(
             @Parameter(description = "ID do pedido")
             @PathVariable Long id,
             @Valid @RequestBody OrderStatus status) {
@@ -111,15 +111,15 @@ public class OrderController {
     }
  
     @DeleteMapping("/{id}")
-    @Operation(summary = "Cancelar pedido",
-               description = "Cancela um pedido se possível")
+    @Operation(summary = "Cancel order",
+               description = "Cancel an order if possible")
     @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Order cancelado com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Order não encontrado"),
-        @ApiResponse(responseCode = "400", description = "Order não pode ser cancelado")
+        @ApiResponse(responseCode = "204", description = "Order canceled successfully"),
+        @ApiResponse(responseCode = "404", description = "Order not found"),
+        @ApiResponse(responseCode = "400", description = "Order cannot be canceled")
     })
-    public ResponseEntity<Void> cancelarOrder(
-            @Parameter(description = "ID do pedido")
+    public ResponseEntity<Void> cancelOrder(
+            @Parameter(description = "Order's ID")
             @PathVariable Long id) {
 
         orderService.cancelOrder(id);
@@ -127,14 +127,14 @@ public class OrderController {
     }
 
     @GetMapping("/customer/{customerId}")
-    @Operation(summary = "Histórico do customer",
-               description = "Lista todos os pedidos de um customer")
+    @Operation(summary = "Customer's order history",
+               description = "Lists all orders for a customer")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Histórico recuperado com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Customer não encontrado")
+        @ApiResponse(responseCode = "200", description = "History retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "Customer not found")
     })
-    public ResponseEntity<List<OrderDTO>> buscarPorCustomer(
-            @Parameter(description = "ID do customer")
+    public ResponseEntity<List<OrderDTO>> findByCustomer(
+            @Parameter(description = "Customer's ID")
             @PathVariable Long customerId) {
 
         List<OrderDTO> orders = orderService.findOrdersByCustomer(customerId);
@@ -142,17 +142,17 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
  
-    @GetMapping("/restaurante/{restauranteId}")
-    @Operation(summary = "Orders do restaurante",
-               description = "Lista todos os pedidos de um restaurante")
+    @GetMapping("/restaurant/{restaurantId}")
+    @Operation(summary = "Restaurant's orders",
+               description = "Lists all orders for a restaurant")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Orders recuperados com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Restaurante não encontrado")
+        @ApiResponse(responseCode = "200", description = "Orders retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "Restaurant not found")
     })
-    public ResponseEntity<List<OrderDTO>> buscarPorRestaurante(
-            @Parameter(description = "ID do restaurante")
+    public ResponseEntity<List<OrderDTO>> findByRestaurant(
+            @Parameter(description = "Restaurant's ID")
             @PathVariable Long restauranteId,
-            @Parameter(description = "Status do pedido")
+            @Parameter(description = "Order status")
             @RequestParam(required = false) OrderStatus status) {
  
         List<OrderDTO> orders =
@@ -161,21 +161,21 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
  
-    @PostMapping("/calcular")
-    @Operation(summary = "Calcular total do pedido",
-               description = "Calcula o total de um pedido sem salvá-lo")
+    @PostMapping("/calculate")
+    @Operation(summary = "Calculate order total",
+               description = "Calculates the total of an order without saving it")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Total calculado com sucesso"),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+        @ApiResponse(responseCode = "200", description = "Total calculated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid data"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<BigDecimal> calcularTotal(
+    public ResponseEntity<BigDecimal> calculateTotal(
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Itens para cálculo"
+                description = "Items for calculation"
             ) Long id) {
-        BigDecimal calculo = orderService.calculateTotalOrder(id);
-        return ResponseEntity.ok(calculo);
+        BigDecimal calculation = orderService.calculateTotalOrder(id);
+        return ResponseEntity.ok(calculation);
     }
 }
  

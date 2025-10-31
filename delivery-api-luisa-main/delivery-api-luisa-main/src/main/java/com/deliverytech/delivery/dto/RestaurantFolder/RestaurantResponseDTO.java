@@ -1,9 +1,7 @@
 package com.deliverytech.delivery.dto.RestaurantFolder;
 
 import lombok.Data;
-import java.util.Map;
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 @Data

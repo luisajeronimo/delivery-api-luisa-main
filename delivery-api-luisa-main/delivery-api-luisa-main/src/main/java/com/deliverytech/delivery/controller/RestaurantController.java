@@ -29,12 +29,12 @@ public class RestaurantController {
     private IRestaurantService restaurantService;
 
     @Operation(
-            summary = "Lista todos os Restaurantes",
-            description = "Retorna a lista de Restaurantes registrados",
+            summary = "All restaurants listed",
+            description = "Returns the list of registered Restaurants",
             responses = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "Restaurantes listados com sucesso",
+                        description = "Restaurants listed successfully",
                         content = @Content(mediaType = "application/json")
                 )
             }
@@ -54,12 +54,12 @@ public class RestaurantController {
     }
 
     @Operation(
-            summary = "Cadastra um novo Restaurante",
-            description = "Cadastra um novo Restaurante",
+            summary = "Register a new Restaurant",
+            description = "Registers a new Restaurant",
             responses = {
                 @ApiResponse(
                         responseCode = "201",
-                        description = "Restaurante cadastrado com sucesso",
+                        description = "Restaurant registered successfully",
                         content = @Content(mediaType = "application/json")
                 )
             }

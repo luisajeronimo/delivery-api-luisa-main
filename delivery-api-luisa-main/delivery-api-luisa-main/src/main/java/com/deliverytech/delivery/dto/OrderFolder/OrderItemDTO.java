@@ -1,7 +1,5 @@
 package com.deliverytech.delivery.dto.OrderFolder;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

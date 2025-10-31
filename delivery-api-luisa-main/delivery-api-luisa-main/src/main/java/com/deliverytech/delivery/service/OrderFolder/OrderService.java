@@ -1,7 +1,6 @@
 package com.deliverytech.delivery.service.OrderFolder;
  
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +9,8 @@ import java.util.Optional;
  
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import lombok.Data;
  
 import com.deliverytech.delivery.dto.OrderFolder.*;
@@ -27,6 +27,21 @@ import com.deliverytech.delivery.repository.OrderFolder.IOrderRepository;
 import com.deliverytech.delivery.repository.ProductFolder.IProductRepository;
 import com.deliverytech.delivery.repository.RestaurantFolder.IRestaurantRepository;
 
+@Service
+/**
+ * Serviço de domínio para operações de Pedido (Order).
+ *
+ * Responsabilidades:
+ * - Implementar as regras de negócio relacionadas a criação, consulta, listagem,
+ *   atualização de status e cancelamento de pedidos.
+ * - Orquestrar validações envolvendo cliente, restaurante e produtos.
+ * - Mapear entre entidades JPA e DTOs via {@link org.modelmapper.ModelMapper}.
+ *
+ * Observações:
+ * - Lança {@link com.deliverytech.delivery.config.exception.EntityNotFoundException} quando
+ *   recursos referenciados não são encontrados e {@link com.deliverytech.delivery.config.exception.BusinessException}
+ *   para regras de negócio inválidas; essas exceções são tratadas por um handler global.
+ */
 public class OrderService implements IOrderService {
 
     @Autowired
@@ -45,6 +60,16 @@ public class OrderService implements IOrderService {
     private ModelMapper mapper;
  
     @Override
+    /**
+     * Cria um novo pedido.
+     * Fluxo resumido:
+     * 1. Verifica existência e status do cliente e restaurante.
+     * 2. Valida disponibilidade dos produtos e calcula subtotal.
+     * 3. Calcula taxa de entrega e total, persiste pedido e itens.
+     *
+     * @param dto DTO com dados do pedido
+     * @return DTO do pedido criado
+     */
     public OrderDTO createOrder(OrderDTO dto) {
 
         // 1. Validar cliente existe e está ativo
@@ -118,13 +143,19 @@ public class OrderService implements IOrderService {
         for (OrderItem item : orderItems) {
             item.setOrder(orderSaved);
         }
-        orderSaved.setItems(orderItems);
-
+        orderSaved.setOrderItemList(orderItems);
+        orderRepository.save(orderSaved);
         // 8. Retornar order criado
         return mapper.map(orderSaved, OrderDTO.class);
     }
  
     @Override
+    /**
+     * Recupera um pedido por ID e mapeia para DTO.
+     *
+     * @param id identificador do pedido
+     * @return OrderDTO correspondente
+     */
     public OrderDTO findOrderById(Long id) {
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Order with ID " + id  + " not found"));
@@ -132,8 +163,17 @@ public class OrderService implements IOrderService {
     }
  
     @Override
+    /**
+     * Lista pedidos com filtros opcionais e paginação.
+     *
+     * @param status filtro por status (opcional)
+     * @param startDate data inicial do intervalo (opcional)
+     * @param endDate data final do intervalo (opcional)
+     * @param pageable parâmetros de paginação
+     * @return lista (página) de OrderDTOs
+     */
     public List<OrderDTO> listOrders(OrderStatus status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        List<Order> orders = orderRepository.findByStatusAndOrderDateBetweenOrderByOrderDateDesc(status, startDate, endDate, pageable);
+        List<Order> orders = orderRepository.findByOrderStatusAndOrderDateBetweenOrderByOrderDateDesc(status, startDate, endDate, pageable);
         return Arrays.asList(mapper.map(orders, OrderDTO[].class));
     }
 
@@ -158,44 +198,75 @@ public class OrderService implements IOrderService {
     }
  
     @Override
+    /**
+     * Atualiza o status de um pedido validando a transição de estado.
+     *
+     * @param id id do pedido
+     * @param status novo status
+     * @return OrderDTO atualizado
+     */
     public OrderDTO updateOrderStatus(Long id, OrderStatus status) {
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found"));
-        order.setStatus(status);
+        order.setOrderStatus(status);
         
         // Validar transições de status permitidas
-        if (!isValidTransition(order.getStatus(), status)) {
+        if (!isValidTransition(order.getOrderStatus(), status)) {
             throw new BusinessException("Invalid status transition: " +
-                order.getStatus() + " -> " + status);
+                order.getOrderStatus() + " -> " + status);
         }
         Order orderUpdated = orderRepository.save(order);
         return mapper.map(orderUpdated, OrderDTO.class);
     }
  
     @Override
+    /**
+     * Cancela um pedido quando permitido pelas regras de negócio.
+     *
+     * @param id id do pedido
+     */
     public void cancelOrder(Long id) {
         Order order = orderRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found"));
-        if (!canBeCancelled(order.getStatus())) {
-            throw new BusinessException("Order cannot be cancelled in status: " + order.getStatus());
+        if (!canBeCancelled(order.getOrderStatus())) {
+            throw new BusinessException("Order cannot be cancelled in status: " + order.getOrderStatus());
         }
-        order.setStatus(OrderStatus.CANCELLED);
+        order.setOrderStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
     }
  
     @Override
+    /**
+     * Retorna o histórico de pedidos de um cliente.
+     *
+     * @param id id do cliente
+     * @return lista de OrderDTOs
+     */
     public List<OrderDTO> findOrdersByCustomer(Long id) {
         List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(id);
         return Arrays.asList(mapper.map(orders, OrderDTO[].class));
     }
  
     @Override
+    /**
+     * Retorna pedidos de um restaurante, com filtro opcional por status.
+     *
+     * @param id id do restaurante
+     * @param status filtro por status (opcional)
+     * @return lista de OrderDTOs
+     */
     public List<OrderDTO> findOrdersByRestaurant(Long id, OrderStatus status) {
-         List<Order> orders = orderRepository.findByRestaurantIdAndStatusOrderByOrderDateDesc(id, status);
+         List<Order> orders = orderRepository.findByRestaurantIdAndOrderStatusOrderByOrderDateDesc(id, status);
         return Arrays.asList(mapper.map(orders, OrderDTO[].class));
     }
  
     @Override
+    /**
+     * Calcula o total de um pedido (soma unitária dos itens) sem alterar o estado persistido.
+     *
+     * @param id id do pedido
+     * @return total calculado
+     */
     public BigDecimal calculateTotalOrder(Long id) {
         BigDecimal total = BigDecimal.ZERO;
  
@@ -203,7 +274,7 @@ public class OrderService implements IOrderService {
             .orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found"));
        
         if (order != null) {
-          for (OrderItem item : order.getItems()) {
+          for (OrderItem item : order.getOrderItemList()) {
             Product product = item.getProduct();
 
             BigDecimal subtotalItem = product.getPrice()
