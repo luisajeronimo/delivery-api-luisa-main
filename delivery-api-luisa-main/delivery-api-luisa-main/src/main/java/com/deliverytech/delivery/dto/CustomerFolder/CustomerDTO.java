@@ -21,9 +21,15 @@ public class CustomerDTO {
     @Pattern(regexp = "\\d{10,11}", message = "Phone must have 10 or 11 digits")
     private String phone;
 
+    @NotBlank(message = "CPF is required")
+    @Pattern(regexp = "\\d{11}", message = "CPF must have 11 digits")
+    private String cpf;
+
     @NotBlank(message = "Address is required")
     @Size(max = 200, message = "Address must be at most 200 characters")
     private String address;
+
+
 
     // Getters and Setters
     public String getName() { return name; }
