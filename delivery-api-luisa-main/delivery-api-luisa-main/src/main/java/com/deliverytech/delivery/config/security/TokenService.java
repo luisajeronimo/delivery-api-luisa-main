@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.infra.security;
+package com.deliverytech.delivery.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

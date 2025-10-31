@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.utils;
+package com.deliverytech.delivery.config.utils;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

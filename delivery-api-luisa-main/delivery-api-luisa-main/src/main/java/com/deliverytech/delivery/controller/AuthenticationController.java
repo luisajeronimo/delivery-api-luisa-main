@@ -1,6 +1,6 @@
 package com.deliverytech.delivery.controller;
 
-import com.deliverytech.delivery.infra.security.TokenService;
+import com.deliverytech.delivery.config.security.TokenService;
 import com.deliverytech.delivery.dto.UserFolder.AuthenticationDTO;
 import com.deliverytech.delivery.dto.UserFolder.LoginResponseDTO;
 import com.deliverytech.delivery.dto.UserFolder.RegisterDTO;

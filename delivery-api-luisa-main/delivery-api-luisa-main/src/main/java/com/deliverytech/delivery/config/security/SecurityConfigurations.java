@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.infra.security;
+package com.deliverytech.delivery.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

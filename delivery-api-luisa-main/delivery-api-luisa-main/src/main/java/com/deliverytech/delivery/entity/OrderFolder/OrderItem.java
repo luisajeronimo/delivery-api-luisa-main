@@ -22,7 +22,8 @@ public class OrderItem {
     private Long id;
 
     private int quantity;
-    private BigDecimal subTotal;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotal;
     private String description;
 
     @ManyToOne

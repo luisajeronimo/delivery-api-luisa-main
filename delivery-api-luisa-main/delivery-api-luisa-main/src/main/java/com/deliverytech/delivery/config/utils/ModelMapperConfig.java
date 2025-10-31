@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.config;
+package com.deliverytech.delivery.config.utils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

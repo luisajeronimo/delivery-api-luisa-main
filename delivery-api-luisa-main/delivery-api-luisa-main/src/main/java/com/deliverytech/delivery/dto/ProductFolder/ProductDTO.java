@@ -3,6 +3,9 @@ package com.deliverytech.delivery.dto.ProductFolder;
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import lombok.Data;
@@ -11,24 +14,17 @@ import lombok.Data;
 @Data
 public class ProductDTO {
 
-    @NotNull(message = "Restaurant ID cannot be null")
-    private Long restaurantId;
-
-    @NotNull(message = "Product name cannot be null")
+    @NotBlank(message = "Name is required")
+    @Size(max = 25, message = "Name must be at most 25 characters")
     private String name;
 
+    @Size(max = 200, message = "Description must be at most 200 characters")
     private String description;
 
-    @NotNull(message = "Product price cannot be null")
     private BigDecimal price;
-
-    private String image;
-
-    @NotNull(message = "Product category cannot be null")
     private String category;
-    
-    @NotNull(message = "Product quantity must be greater than 0")
-    @Min(value = 1, message = "Product quantity must be greater than 0")
-    @Max(value = 100, message = "Product quantity must be less than 100")
-    private int quantity;
+    private boolean available;
+
+    @Positive(message = "Restaurant ID is required")
+    private Long restaurantId;
 }

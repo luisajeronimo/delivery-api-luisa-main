@@ -13,10 +13,7 @@ public class ProductResponseDTO {
     private String name;
     private String description;
     private BigDecimal price;
-    private String image;
     private String category;
-    private int quantity;
-    private BigDecimal rating;
-    private ProductStatus isActive;
-    private String restaurantId;
+    private ProductStatus available;
+    private Long restaurantId;
 }

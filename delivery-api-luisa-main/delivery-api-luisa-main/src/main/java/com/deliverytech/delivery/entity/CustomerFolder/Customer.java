@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.entity.ClientFolder;
+package com.deliverytech.delivery.entity.CustomerFolder;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,29 +12,29 @@ import com.deliverytech.delivery.entity.OrderFolder.Order;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "clients")
-public class Client {
+@Table(name = "customers")
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "client_id")
+    @Column(name = "customer_id")
     private Long id;
 
-    @Column(nullable = false, name = "client_name")
+    @Column(nullable = false, name = "customer_name")
     private String name;
 
-    @Column(nullable = false, name = "client_email")
+    @Column(nullable = false, name = "customer_email")
     private String email;
 
     @Column(nullable = false)
     private String cpf;
 
-    @Column(nullable = false, name = "client_phone")
+    @Column(nullable = false, name = "customer_phone")
     private String phone;
 
     private String image;
 
-    @Column(name = "client_rating")
+    @Column(name = "customer_rating")
     private String rating;
 
     private boolean active;
@@ -42,6 +42,6 @@ public class Client {
     @Column(name = "created_at", nullable = false)
     private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "customer")
     private List<Order> orders;
 }

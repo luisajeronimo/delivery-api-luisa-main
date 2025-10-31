@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.exception;
+package com.deliverytech.delivery.config.exception;
 
 import java.util.HashMap;
 import java.util.Map;

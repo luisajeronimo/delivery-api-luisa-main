@@ -12,9 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "API de Clientes",
+                title = "Customer's API",
                 version = "1.0.0",
-                description = "Documentação da API para gerenciamento de clientes"
+                description = "API Documentation for Customer Management"
         )
 )
 

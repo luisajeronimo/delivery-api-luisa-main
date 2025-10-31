@@ -1,5 +1,6 @@
 package com.deliverytech.delivery.repository.ProductFolder;
 
+import com.deliverytech.delivery.entity.CustomerFolder.Customer;
 import com.deliverytech.delivery.entity.ProductFolder.Product;
 import com.deliverytech.delivery.entity.ProductFolder.ProductStatus;
 import com.deliverytech.delivery.entity.RestaurantFolder.Restaurant;
@@ -10,17 +11,26 @@ import java.util.List;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
     
-    List<Product> findByCategoryAndIsActive(String category, ProductStatus isActive);
+    // Buscar produtos por restaurante
+    List<Product> findByRestaurantAndStatus(Restaurant restaurant, ProductStatus status);
 
-    List<Product> findAllByCategoryAndIsActive(String category, ProductStatus isActive);
+    // Buscar produtos por restaurante ID
+    List<Product> findByRestaurantIdAndStatus(Long restaurantId, ProductStatus status);
 
-    List<Product> findByNameContainingIgnoreCaseAndIsActive(String name, ProductStatus isActive);
+    // Buscar por categoria
+    List<Product> findByCategoryAndStatus(String categoria, ProductStatus status);
+ 
+    // Buscar por nome contendo
+    List<Product> findByNameContainingIgnoreCase(String nome);
+    List<Product> findByNameContainingIgnoreCaseAndStatus(String nome, ProductStatus status);
 
-    List<Product> findByPriceBetweenAndIsActive(BigDecimal priceAfter, BigDecimal priceBefore, ProductStatus isActive);
+    // Buscar por faixa de preço
+    List<Product> findByPriceBetweenAndStatus(BigDecimal priceMin, BigDecimal priceMax, ProductStatus status);
+ 
+    // Buscar produtos mais baratos que um valor
+    List<Product> findByPriceIsLessThanEqualAndStatus(BigDecimal price, ProductStatus status);
 
-    List<Product> findByPriceIsLessThanEqualAndIsActive(BigDecimal priceIsLessThanEqual, ProductStatus isActive);
-
-    List<Product> findAllByRestaurantAndIsActive(Restaurant restaurant, ProductStatus isActive);
-
-    List<Product> findAllByRestaurant_IdAndIsActive(Long restaurantId, ProductStatus productStatus);
+    // Ordenar por preço
+    List<Product> findByStatusOrderByPriceAsc();
+    List<Product> findByStatusOrderByPriceDesc();
 }

@@ -17,16 +17,17 @@ public class OrderItemService implements IOrderItemService {
     @Autowired
     private IOrderItemRepository orderItemRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public List<OrderItemDTO> getAllItensOrder() {
-        ModelMapper modelMapper = new ModelMapper();
+    public List<OrderItemDTO> getAllItemsOrder() {
         List<OrderItem> itensOrder = orderItemRepository.findAll();
         return Arrays.asList(modelMapper.map(itensOrder, OrderItemDTO[].class));
     }
 
     @Override
     public OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         OrderItem entity = modelMapper.map(orderItemDTO, OrderItem.class);
         OrderItem order = orderItemRepository.save(entity);
         return modelMapper.map(order, OrderItemDTO.class);
@@ -34,7 +35,6 @@ public class OrderItemService implements IOrderItemService {
 
     @Override
     public OrderItemDTO updateOrderItem(Long itemOrderId, OrderItemDTO orderItemDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         OrderItem orderItem = orderItemRepository.findById(itemOrderId).orElse(null);
         if (orderItem == null) {
             return null;
@@ -46,7 +46,6 @@ public class OrderItemService implements IOrderItemService {
 
     @Override
     public OrderItemDTO getOrderItem(Long itemOrderId) {
-        ModelMapper modelMapper = new ModelMapper();
         return orderItemRepository.findById(itemOrderId).map(orderItem -> modelMapper.map(orderItem, OrderItemDTO.class)).orElse(null);
     }
 

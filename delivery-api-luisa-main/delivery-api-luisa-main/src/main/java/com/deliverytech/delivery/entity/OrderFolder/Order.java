@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.deliverytech.delivery.entity.ClientFolder.Client;
+import com.deliverytech.delivery.entity.CustomerFolder.Customer;
 import com.deliverytech.delivery.entity.RestaurantFolder.Restaurant;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -31,7 +31,7 @@ public class Order {
     @Column(name = "delivery_adress", nullable = false)
     private String deliveryAddress;
 
-    BigDecimal subTotal;
+    BigDecimal subtotal;
 
     @Column(name = "delivery_fee")
     BigDecimal deliveryFee;
@@ -47,8 +47,8 @@ public class Order {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")

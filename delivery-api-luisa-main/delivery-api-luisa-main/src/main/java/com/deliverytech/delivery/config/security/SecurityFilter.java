@@ -1,4 +1,4 @@
-package com.deliverytech.delivery.infra.security;
+package com.deliverytech.delivery.config.security;
 
 import com.deliverytech.delivery.repository.UserFolder.IUserRepository;
 import jakarta.servlet.FilterChain;

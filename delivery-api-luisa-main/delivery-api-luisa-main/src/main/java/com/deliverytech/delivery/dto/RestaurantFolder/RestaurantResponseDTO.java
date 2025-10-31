@@ -2,20 +2,21 @@ package com.deliverytech.delivery.dto.RestaurantFolder;
 
 import lombok.Data;
 import java.util.Map;
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 
 @Data
 public class RestaurantResponseDTO {
     
     private Long id;
-    private String image;
-    private String rating;
-    private boolean active;
-    private String description;
     private String name;
-    private String cuisine;
+    private String category;
     private String address;
-    private String cnpj;
+    private String zipCode;
     private String phone;
-    private Map<DayOfWeek,WorkHoursDTO> workHours;
+    private BigDecimal deliveryFee;
+    private String CNPJ;
+    private boolean isActive;
+    private LocalDateTime registrationDate;
 }

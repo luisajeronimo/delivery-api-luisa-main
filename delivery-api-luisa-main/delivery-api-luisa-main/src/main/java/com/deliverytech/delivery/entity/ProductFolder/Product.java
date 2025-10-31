@@ -35,7 +35,7 @@ public class Product {
     private BigDecimal rating;
 
     @Enumerated(EnumType.STRING)
-    private ProductStatus isActive;
+    private ProductStatus status;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")

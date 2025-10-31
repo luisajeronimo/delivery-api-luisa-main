@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface IOrderItemService {
     
-    List<OrderItemDTO> getAllItensOrder();
+    List<OrderItemDTO> getAllItemsOrder();
     OrderItemDTO createOrderItem(OrderItemDTO orderItemDTO);
     OrderItemDTO updateOrderItem(Long orderItemId, OrderItemDTO orderItemDTO);
     OrderItemDTO getOrderItem(Long orderItemId);

@@ -12,7 +12,7 @@ import java.util.List;
 public class OrderResponseDTO {
     
     private Long id;
-    private Long clientId;
+    private Long customerId;
     private Long restaurantId;
     private String deliveryAddress;
     private String status;

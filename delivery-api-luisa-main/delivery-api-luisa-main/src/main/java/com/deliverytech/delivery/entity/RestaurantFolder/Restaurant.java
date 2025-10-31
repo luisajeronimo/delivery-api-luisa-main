@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.deliverytech.delivery.utils.WorkHours;
 
 import com.deliverytech.delivery.entity.ProductFolder.Product;
+import com.deliverytech.delivery.config.utils.WorkHours;
 import com.deliverytech.delivery.entity.OrderFolder.Order;
 
 import java.math.BigDecimal;
@@ -37,13 +37,17 @@ public class Restaurant {
     @Column(name = "restaurant_name", nullable = false, length = 50)
     private String name;
 
+    // Taxa de entrega => "delivery_fee"
+    @Column(name = "delivery_fee")
+    private BigDecimal deliveryFee;
+
     // Descrição livre do restaurante => "restaurant_description"
     @Column(name = "restaurant_description")
     private String description;
 
-    // Tipo de cozinha (ex.: Pizza, Japonesa) => "cuisine"
+    // Tipo de cozinha (ex.: Pizza, Japonesa) => "category"
     @Column(length = 25)
-    private String cuisine;
+    private String category;
 
     // Avaliação média (ex.: 4.5) => "restaurant_rating"
     @Column(name = "restaurant_rating")

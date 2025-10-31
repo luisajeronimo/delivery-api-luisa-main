@@ -1,17 +1,20 @@
 package com.deliverytech.delivery.service.OrderFolder;
 
-import com.deliverytech.delivery.dto.OrderFolder.OrderDTO;
-import com.deliverytech.delivery.dto.OrderFolder.OrderResponseDTO;
-import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
-
-@Service
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import com.deliverytech.delivery.dto.OrderFolder.OrderDTO;
+import com.deliverytech.delivery.entity.OrderFolder.OrderStatus;
+ 
 public interface IOrderService {
-    
-    List<OrderResponseDTO> getAllOrders();
-    OrderResponseDTO createOrder(OrderDTO orderDTO);
-    OrderResponseDTO updateOrder(Long orderId, OrderDTO orderDTO);
-    OrderResponseDTO getOrder(Long orderId);
-    void deleteOrder(Long orderId);
+
+ OrderDTO createOrder(OrderDTO dto);
+ OrderDTO findOrderById(Long id);
+ List<OrderDTO> listOrders(OrderStatus status, LocalDateTime datainicio, LocalDateTime datafim, Pageable pageable);
+ OrderDTO updateOrderStatus(Long id, OrderStatus status);
+ void cancelOrder(Long id);
+ List<OrderDTO> findOrdersByCustomer(Long id);
+ List<OrderDTO> findOrdersByRestaurant(Long id, OrderStatus status);
+ BigDecimal calculateTotalOrder(Long id);
 }
