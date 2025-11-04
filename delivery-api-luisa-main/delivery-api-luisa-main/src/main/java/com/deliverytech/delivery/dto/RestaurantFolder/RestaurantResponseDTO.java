@@ -11,10 +11,10 @@ public class RestaurantResponseDTO {
     private String name;
     private String category;
     private String address;
-    private String zipCode;
+    private String cep;
     private String phone;
     private BigDecimal deliveryFee;
-    private String CNPJ;
+    private String cnpj;
     private boolean isActive;
     private LocalDateTime registrationDate;
 }

@@ -27,9 +27,8 @@ public class CustomerService implements ICustomerService {
     @Autowired
     private ICustomerRepository customerRepository;
 
-    public CustomerService() {
-        super();
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     /**
@@ -38,7 +37,6 @@ public class CustomerService implements ICustomerService {
      * @return lista de CustomerResponseDTO
      */
     public List<CustomerResponseDTO> getAllCustomers() {
-        ModelMapper modelMapper = new ModelMapper();
         List<Customer> customers = customerRepository.findAll();
         return Arrays.asList(modelMapper.map(customers, CustomerResponseDTO[].class));
     }
@@ -54,7 +52,6 @@ public class CustomerService implements ICustomerService {
         if (customerRepository.existsByEmail(customerDTO.getEmail())) {
             throw new BusinessException("Email já cadastrado: " + customerDTO.getEmail());
         }
-        ModelMapper modelMapper = new ModelMapper();
         Customer entity = modelMapper.map(customerDTO, Customer.class);
         Customer customer = customerRepository.save(entity);
         return modelMapper.map(customer, CustomerResponseDTO.class);
@@ -69,7 +66,6 @@ public class CustomerService implements ICustomerService {
      * @return CustomerResponseDTO após atualização ou null se não existir
      */
     public CustomerResponseDTO updateCustomer(Long customerId, CustomerDTO customerDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if (customer == null) {
             return null;
@@ -87,7 +83,6 @@ public class CustomerService implements ICustomerService {
      * @return CustomerResponseDTO ou null se não encontrado
      */
     public CustomerResponseDTO getCustomer(Long customerId) {
-        ModelMapper modelMapper = new ModelMapper();
         return customerRepository.findById(customerId).map(customer -> modelMapper.map(customer, CustomerResponseDTO.class)).orElse(null);
     }
 
@@ -101,7 +96,7 @@ public class CustomerService implements ICustomerService {
         customerRepository.deleteById(customerId);
     }
 
-    @Override
+    @Override  
     /**
      * Busca um cliente pelo e-mail.
      *
@@ -109,8 +104,6 @@ public class CustomerService implements ICustomerService {
      * @return CustomerResponseDTO correspondente
      */
     public CustomerResponseDTO searchByEmail(String email) {
-        ModelMapper modelMapper = new ModelMapper();
-        var customer = customerRepository.findCustomerByEmail(email);
-        return modelMapper.map(customer, CustomerResponseDTO.class);
+        return customerRepository.findCustomerByEmail(email).map(customer -> modelMapper.map(customer, CustomerResponseDTO.class)).orElse(null);
     }
 }

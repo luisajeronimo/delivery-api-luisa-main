@@ -2,7 +2,8 @@ package com.deliverytech.delivery.entity.UserFolder;
 
 public enum UserRole {
     ADMIN("admin"),
-    USER("user");
+    USER("user"),
+    RESTAURANT("restaurant");
 
     private String role;
 

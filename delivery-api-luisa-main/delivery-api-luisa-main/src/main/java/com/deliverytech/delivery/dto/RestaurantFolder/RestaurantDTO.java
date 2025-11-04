@@ -23,7 +23,7 @@ public class RestaurantDTO {
 
     @NotBlank(message = "ZIP code is required")
     @Size(max = 8, message = "ZIP code must be at most 8 characters")
-    private String zipCode;
+    private String cep;
 
     @NotBlank(message = "Phone is required")
     @Size(max = 10, message = "Phone must be at most 10 characters")
@@ -33,6 +33,6 @@ public class RestaurantDTO {
 
     @NotBlank(message = "CNPJ is required")
     @Size(max = 14, message = "CNPJ must be at most 14 characters")
-    private String CNPJ;
+    private String cnpj;
     private boolean active;
 }

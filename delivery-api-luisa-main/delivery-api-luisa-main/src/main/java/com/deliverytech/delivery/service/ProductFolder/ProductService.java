@@ -61,15 +61,8 @@ public class ProductService implements IProductService {
         }
 
         Product entity = modelMapper.map(dto, Product.class);
-        if (entity.getRestaurant() == null) {
-            Restaurant r = new Restaurant();
-            r.setId(dto.getRestaurantId());
-            entity.setRestaurant(r);
-        } else {
-            entity.getRestaurant().setId(dto.getRestaurantId());
-        }
-        Product product = productRepository.save(entity);
-        return modelMapper.map(product, ProductResponseDTO.class);
+        Product registeredEntity = productRepository.save(entity);
+        return modelMapper.map(registeredEntity, ProductResponseDTO.class);
     }
 
     @Override

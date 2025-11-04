@@ -26,6 +26,9 @@ public class OrderDTO {
     @Valid
     private List<OrderItemDTO> items;
 
+    @NotNull(message = "Order date is required")
+    private String orderDate;
+
     // Getters e Setters
     public Long getCustomerId() { return customerId; }
     public void setCustomerId(Long customerId) { this.customerId = customerId; }
