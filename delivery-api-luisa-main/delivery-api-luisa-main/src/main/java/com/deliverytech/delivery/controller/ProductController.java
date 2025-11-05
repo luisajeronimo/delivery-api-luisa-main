@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -115,16 +116,20 @@ public class ProductController {
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/category/{category}")
     @Operation(summary = "Find by category",
-               description = "List products from a specific category")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Products found")
-    })
+               description = "List products from a specific category",
+               responses = {
+                   @ApiResponse(responseCode = "200", 
+                                description = "Products found", 
+                                content = @Content(mediaType = "application/json")
+                    )
+                }
+                )
     public ResponseEntity<List<ProductResponseDTO>> findByCategory(
             @Parameter(description = "Product's category")
             @PathVariable String category) {
 
         List<ProductResponseDTO> products = productService.getAllProductsByCategory(category);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
  
     @SecurityRequirement(name = "bearerAuth")

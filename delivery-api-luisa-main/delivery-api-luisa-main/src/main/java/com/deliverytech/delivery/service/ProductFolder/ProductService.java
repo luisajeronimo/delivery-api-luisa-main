@@ -60,9 +60,17 @@ public class ProductService implements IProductService {
             throw new BusinessException("Product with same name already exists: " + dto.getName());
         }
 
-        Product entity = modelMapper.map(dto, Product.class);
-        Product registeredEntity = productRepository.save(entity);
-        return modelMapper.map(registeredEntity, ProductResponseDTO.class);
+    Product entity = modelMapper.map(dto, Product.class);
+
+    // Evita atualizar um produto existente por acidente: garantir que id seja nulo
+    entity.setId(null);
+
+    // Use referência gerenciada do restaurante para associar sem inserir um novo restaurante
+    Restaurant restaurantRef = restaurantRepository.getReferenceById(dto.getRestaurantId());
+    entity.setRestaurant(restaurantRef);
+
+    Product registeredEntity = productRepository.save(entity);
+    return modelMapper.map(registeredEntity, ProductResponseDTO.class);
     }
 
     @Override
