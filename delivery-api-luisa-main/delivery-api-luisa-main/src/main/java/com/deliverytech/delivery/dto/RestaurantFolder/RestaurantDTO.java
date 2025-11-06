@@ -35,4 +35,5 @@ public class RestaurantDTO {
     @Size(max = 14, message = "CNPJ must be at most 14 characters")
     private String cnpj;
     private boolean active;
+    private String workHours;
 }
