@@ -106,10 +106,13 @@
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
+        <!-- spring-boot-starter-test already declared above with scope 'test' -->
+        
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
     </dependencies>
 
