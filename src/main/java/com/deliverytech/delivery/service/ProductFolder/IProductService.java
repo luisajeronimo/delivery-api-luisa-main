@@ -2,7 +2,6 @@ package com.deliverytech.delivery.service.ProductFolder;
 
 import com.deliverytech.delivery.dto.ProductFolder.ProductDTO;
 import com.deliverytech.delivery.dto.ProductFolder.ProductResponseDTO;
-import com.deliverytech.delivery.entity.RestaurantFolder.Restaurant;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,7 +37,7 @@ public interface IProductService {
     /**
      * Retorna todos os produtos de um restaurante (filtrados por disponibilidade internamente).
      */
-    List<ProductResponseDTO> getAllProductsByRestaurant(Restaurant restaurant);
+    List<ProductResponseDTO> getAllProductsByRestaurant(Long restaurantId);
 
     /**
      * Retorna produtos por categoria.

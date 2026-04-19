@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import com.deliverytech.delivery.entity.ProductFolder.ProductStatus;
 
 
 @Data
@@ -20,7 +21,7 @@ public class ProductDTO {
 
     private BigDecimal price;
     private String category;
-    private boolean available;
+    private ProductStatus status;
 
     @Positive(message = "Restaurant ID is required")
     private Long restaurantId;

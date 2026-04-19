@@ -64,6 +64,11 @@ public class ProductService implements IProductService {
 
     // Evita atualizar um produto existente por acidente: garantir que id seja nulo
     entity.setId(null);
+    
+    // Se o status não for enviado no momento da criação, defina como AVAILABLE por padrão
+    if (entity.getStatus() == null) {
+        entity.setStatus(ProductStatus.AVAILABLE);
+    }
 
     // Use referência gerenciada do restaurante para associar sem inserir um novo restaurante
     Restaurant restaurantRef = restaurantRepository.getReferenceById(dto.getRestaurantId());
@@ -77,10 +82,15 @@ public class ProductService implements IProductService {
     /**
      * Lista produtos disponíveis para o restaurante informado.
      *
-     * @param restaurant entidade do restaurante (pode conter apenas o id)
+     * @param restaurantId id do restaurante
      * @return lista de ProductResponseDTO de produtos disponíveis
      */
-    public List<ProductResponseDTO> getAllProductsByRestaurant(Restaurant restaurant) {
+    public List<ProductResponseDTO> getAllProductsByRestaurant(Long restaurantId) {
+        if (restaurantId == null || !restaurantRepository.existsById(restaurantId)) {
+            throw new EntityNotFoundException("Restaurant not found: " + restaurantId);
+        }
+
+        Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
         List<Product> products = productRepository.findByRestaurantAndStatus(restaurant, ProductStatus.AVAILABLE);
         return Arrays.asList(modelMapper.map(products, ProductResponseDTO[].class));
     }
@@ -145,7 +155,15 @@ public class ProductService implements IProductService {
      * @return ProductResponseDTO atualizado
      */
     public ProductResponseDTO changeProductStatus(Long id, ProductDTO productDTO) {
-        return null;
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+
+        if (productDTO.getStatus() != null) {
+            product.setStatus(productDTO.getStatus());
+        }
+        
+        Product updatedProduct = productRepository.save(product);
+        return modelMapper.map(updatedProduct, ProductResponseDTO.class);
     }
 
     @Override

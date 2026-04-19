@@ -14,6 +14,6 @@ public class ProductResponseDTO {
     private String description;
     private BigDecimal price;
     private String category;
-    private ProductStatus available;
+    private ProductStatus status;
     private Long restaurantId;
 }

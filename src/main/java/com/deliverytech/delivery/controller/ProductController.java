@@ -147,4 +147,21 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/restaurant/{id}")
+    @Operation(summary = "Find product by Restaurant's ID",
+               description = "Retrieve all available products by restaurant ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Products found"),
+        @ApiResponse(responseCode = "404", description = "Restaurant not found")
+    })
+    public ResponseEntity<List<ProductResponseDTO>> findByRestaurantId(
+            @Parameter(description = "Restaurant's ID")
+            @PathVariable Long id) {
+
+        List<ProductResponseDTO> products = productService.getAllProductsByRestaurant(id);
+        return ResponseEntity.ok(products);
+    }
+ 
+
     }
