@@ -91,6 +91,28 @@ public class RestaurantControllerIT {
     }
 
     @Test
+    void shouldRejectPhoneWithMoreThan10Chars() throws Exception {
+    restaurantDTO.setPhone("11912345678"); // 11 dígitos
+
+        mockMvc.perform(post("/api/v1/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(restaurantDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.details.phone").exists());
+    }
+
+    @Test
+    void shouldRejectNameWithMoreThan25Chars() throws Exception {
+    restaurantDTO.setName("Nome do Restaurante com mais de 25 caracteres");
+
+    mockMvc.perform(post("/api/v1/restaurants")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(restaurantDTO)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.details.name").exists());
+    }
+
+    @Test
     void shouldFindRestaurantById() throws Exception {
         mockMvc.perform(get("/api/v1/restaurants/{id}", registeredRestaurant.getId()))
                 .andExpect(status().isOk())
