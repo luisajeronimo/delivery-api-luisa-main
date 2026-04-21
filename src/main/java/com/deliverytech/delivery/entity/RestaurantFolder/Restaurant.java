@@ -33,8 +33,8 @@ public class Restaurant {
     @Column(name = "restaurant_id")
     private Long id;
 
-    // Nome do restaurante (obrigatório, até 50 chars) => "restaurant_name"
-    @Column(name = "restaurant_name", nullable = false, length = 50)
+    // Nome do restaurante (obrigatório, até 25 chars) => "restaurant_name"
+    @Column(name = "restaurant_name", nullable = false, length = 25)
     private String name;
 
     // Taxa de entrega => "delivery_fee"
@@ -72,7 +72,7 @@ public class Restaurant {
     private String cnpj;
 
     // Telefone (até 11 chars) => "restaurant_phone"
-    @Column(name = "restaurant_phone", length = 12)
+    @Column(name = "restaurant_phone", length = 11)
     private String phone;
 
     /**

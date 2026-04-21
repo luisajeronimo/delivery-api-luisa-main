@@ -48,7 +48,7 @@ public class RestaurantControllerIT {
     // DTO requires 8-char cep and 14-char cnpj and phone within size limits
     restaurantDTO.setCep("01234567");
     restaurantDTO.setCnpj("12345678000199");
-    restaurantDTO.setPhone("1199999999");
+    restaurantDTO.setPhone("11999999999");
     restaurantDTO.setDeliveryFee(new BigDecimal("5.50"));
     restaurantDTO.setWorkHours("08:00-22:00");
 
@@ -59,7 +59,7 @@ public class RestaurantControllerIT {
         restaurant.setAddress("Av. Paulista, 1000");
         restaurant.setCep("12345678");
         restaurant.setCnpj("98765432000177");
-        restaurant.setPhone("1188888888");
+        restaurant.setPhone("11888888888");
         restaurant.setDeliveryFee(null);
         restaurant.setActive(true);
         registeredRestaurant = restaurantRepository.save(restaurant);

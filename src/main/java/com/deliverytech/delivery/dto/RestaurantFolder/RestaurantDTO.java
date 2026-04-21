@@ -14,7 +14,7 @@ public class RestaurantDTO {
     private String name;
 
     @NotBlank(message = "Category is required")
-    @Size(max = 50, message = "Category must be at most 50 characters")
+    @Size(max = 25, message = "Category must be at most 25 characters")
     private String category;
 
     @NotBlank(message = "Address is required")
