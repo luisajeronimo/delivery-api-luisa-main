@@ -26,7 +26,7 @@ public class RestaurantDTO {
     private String cep;
 
     @NotBlank(message = "Phone is required")
-    @Size(max = 10, message = "Phone must be at most 10 characters")
+    @Size(max = 11, message = "Phone must be at most 10 characters")
     private String phone;
 
     private BigDecimal deliveryFee;

@@ -91,8 +91,8 @@ public class RestaurantControllerIT {
     }
 
     @Test
-    void shouldRejectPhoneWithMoreThan10Chars() throws Exception {
-    restaurantDTO.setPhone("11912345678"); // 11 dígitos
+    void shouldRejectPhoneWithMoreThan11Chars() throws Exception {
+    restaurantDTO.setPhone("119123456789"); // 12 dígitos
 
         mockMvc.perform(post("/api/v1/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)

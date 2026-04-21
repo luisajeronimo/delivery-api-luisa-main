@@ -71,7 +71,7 @@ public class Restaurant {
     @Column(nullable = false, length = 14)
     private String cnpj;
 
-    // Telefone (até 10 chars) => "restaurant_phone"
+    // Telefone (até 11 chars) => "restaurant_phone"
     @Column(name = "restaurant_phone", length = 11)
     private String phone;
 
